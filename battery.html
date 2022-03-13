@@ -3,14 +3,14 @@
 <head>
   <title>Battery Status API Example</title>
     <meta http-equiv="refresh" content="300">
- 
+ // Change refreshing time by specifying in seconds, this page refresh in every 5 minute from execution.
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 <script>
     var sound = new Howl({
       src: ['notification.mp3'],
       volume: 1.0,
       onend: function () {
-        alert('We finished with the setup!');
+        alert('Finished with the setup!');
       }
     });    
    
@@ -18,8 +18,8 @@
       function updateBatteryStatus(battery) {
         document.querySelector('#charging').textContent = battery.charging ? 'Charging' : 'Not charging';
         document.querySelector('#level').textContent = battery.level*100 + "%";
-        
-       document.querySelectorAll("#level,#charging").textContent = (battery.charging == true && battery.level*100 == 36) ? sound.play() : 'hihi';
+        // You can change value of alert by change in right side of === to desired value.
+       document.querySelectorAll("#level,#charging").textContent = (battery.charging == true && battery.level*100 == 100) ? sound.play() : 'Not charging or battery percentage not full';
       } 
 
       navigator.getBattery().then(function(battery) {
