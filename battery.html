@@ -2,9 +2,8 @@
 <html>
 <head>
   <title>Battery Status API Example</title>
-    <meta http-equiv="refresh" content="10">
-     	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
-  <script>
+    <meta http-equiv="refresh" content="300">
+ 
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 <script>
     var sound = new Howl({
@@ -15,14 +14,12 @@
       }
     });    
    
-   
-
     window.onload = function () {
       function updateBatteryStatus(battery) {
         document.querySelector('#charging').textContent = battery.charging ? 'Charging' : 'Not charging';
         document.querySelector('#level').textContent = battery.level*100 + "%";
         
-       document.querySelectorAll("#level,#charging").textContent = (battery.charging == true && battery.level*100 >= 36) ? sound.play() : 'hihi';
+       document.querySelectorAll("#level,#charging").textContent = (battery.charging == true && battery.level*100 == 36) ? sound.play() : 'hihi';
       } 
 
       navigator.getBattery().then(function(battery) {
@@ -46,12 +43,9 @@
     
   </script>
 </head>
+
 <body>
   <div id="charging">(charging state unknown)</div>
   <div id="level">(battery level unknown)</div>
-
-
-
-
 </body>
 </html>
