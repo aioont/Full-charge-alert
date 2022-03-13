@@ -19,11 +19,13 @@ Locked screen ends in failure to inform.
 2. Open this file in your browser.
 
 #Features
+
 1. Shows battery percentage
 2. Charging status 
 3. Alert on full charge
 
 #How to tune 
+
 Change refreshing time by specifying in seconds, this page refresh in every 5 minute from execution.
 You can change alert value by changing conditional operator operand 
 
