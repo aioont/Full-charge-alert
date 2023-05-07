@@ -26,8 +26,7 @@ Locked screen ends in failure to inform.
 
 #How to tune 
 
-Change refreshing time by specifying in seconds, this page refresh in every 5 minute from execution.
-You can change alert value by changing conditional operator operand 
+Change value of battery.level === 1 to any value you want (1=100% , 0.5=50% like this).
 
 
 
