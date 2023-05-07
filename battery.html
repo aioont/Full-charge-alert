@@ -1,51 +1,177 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Battery Status API Example</title>
-    <meta http-equiv="refresh" content="300">
- // Change refreshing time by specifying in seconds, this page refresh in every 5 minute from execution.
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
-<script>
-    var sound = new Howl({
-      src: ['notification.mp3'],
-      volume: 1.0,
-      onend: function () {
-        alert('Finished with the setup!');
+	<title>Battery Status API Example</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
+	<style>
+body {
+  background-color: #E6E6FA;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+#charging,
+#level {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #666666;
+}
+
+#charging span,
+#level span {
+  font-weight: bold;
+  color: #333333;
+}
+
+/* Styles for battery level */
+#level {
+  position: relative;
+}
+
+#level span:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #eeeeee;
+  border-radius: 5px;
+  z-index: -1;
+}
+
+#level span:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--level) * 100%);
+  height: 100%;
+  background-color: var(--level-color);
+  border-radius: 5px;
+  z-index: -1;
+  transition: width 0.5s ease;
+}
+
+/* Styles for battery charging */
+#charging span {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Battery level color variables */
+:root {
+  --level-0: #d50000;
+  --level-20: #f44336;
+  --level-40: #ff9800;
+  --level-60: #ffc107;
+  --level-80: #8bc34a;
+  --level-100: #4caf50;
+}
+
+/* Set battery level color based on level */
+#level span {
+  --level: calc(var(--battery-level) / 100);
+  --level-color: var(--level-0);
+}
+
+#level span[data-level="20"] {
+  --level-color: var(--level-20);
+}
+
+#level span[data-level="40"] {
+  --level-color: var(--level-40);
+}
+
+#level span[data-level="60"] {
+  --level-color: var(--level-60);
+}
+
+#level span[data-level="80"] {
+  --level-color: var(--level-80);
+}
+
+#level span[data-level="100"] {
+  --level-color: var(--level-100);
+}
+
+	</style>
+      <script>
+  var sound = new Howl({
+    src: ['notification.mp3'],
+    volume: 1.0
+  });
+
+  window.onload = function () {
+    navigator.getBattery().then(function(battery) {
+      function updateBatteryStatus() {
+        var charging = battery.charging ? 'Charging' : 'Not charging';
+        var level = battery.level*100 + "%";
+        document.querySelector('#charging span').textContent = charging;
+        document.querySelector('#level span').textContent = level;
+        if (!battery.charging && battery.level === .76 && !sound.playing()) {
+          sound.play();
+        }
       }
-    });    
-   
-    window.onload = function () {
-      function updateBatteryStatus(battery) {
-        document.querySelector('#charging').textContent = battery.charging ? 'Charging' : 'Not charging';
-        document.querySelector('#level').textContent = battery.level*100 + "%";
-        // You can change value of alert by change in right side of === to desired value.
-       document.querySelectorAll("#level,#charging").textContent = (battery.charging == true && battery.level*100 == 100) ? sound.play() : 'Not charging or battery percentage not full';
-      } 
 
-      navigator.getBattery().then(function(battery) {
-        // Update the battery status initially when the promise resolves ...
-        updateBatteryStatus(battery);
+      // Update the battery status initially when the promise resolves ...
+      updateBatteryStatus();
 
-        // .. and for any subsequent updates.
-        battery.onchargingchange = function () {
-          updateBatteryStatus(battery);
-        };
+      // .. and for any subsequent updates.
+      battery.onchargingchange = function () {
+        updateBatteryStatus();
+      };
+      battery.onlevelchange = function () {
+        updateBatteryStatus();
+      };
+      battery.ondischargingtimechange = function () {
+        updateBatteryStatus();
+      };
+    });
+  };
+</script>
 
-        battery.onlevelchange = function () {
-          updateBatteryStatus(battery);
-        };
-
-        battery.ondischargingtimechange = function () {
-          updateBatteryStatus(battery);
-        };
-      });
-    };
-    
-  </script>
 </head>
-
 <body>
-  <div id="charging">(charging state unknown)</div>
-  <div id="level">(battery level unknown)</div>
+	<div class="container">
+		<h1>Battery Status</h1>
+		<div id="charging"><span>(charging state unknown)</span></div>
+		<div id="level"><span>(battery level unknown)</span></div>
+		<p>Please enable sound settings by going to <strong>Settings &gt; Privacy and Security &gt; Site Settings &gt; Content &gt; Advanced Content Settings &gt; Sound &gt; Allowed to Play Sound &gt; Copy URL of the file opened and paste it in the input box when the "Add" button is clicked </strong>. Note that the exact setting path may vary slightly depending on the browser.</p>
+
+	</div>
 </body>
 </html>
