@@ -141,7 +141,7 @@ h1 {
         var level = battery.level*100 + "%";
         document.querySelector('#charging span').textContent = charging;
         document.querySelector('#level span').textContent = level;
-        if (!battery.charging && battery.level === .76 && !sound.playing()) {
+        if (!battery.charging && battery.level === 1 && !sound.playing()) {
           sound.play();
         }
       }
